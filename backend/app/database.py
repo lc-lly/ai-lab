@@ -13,7 +13,7 @@ engine = create_engine(
 )
 
 # 数据库session会话的连接工厂
-SessionLocal = sessionmaker(engine=engine, autoflush=False)
+SessionLocal = sessionmaker(bind=engine, autoflush=False)
 
 def get_db():
     db = SessionLocal()
