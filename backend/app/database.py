@@ -8,12 +8,11 @@ from sqlalchemy import create_engine, DateTime
 from app.config import settings
 from datetime import datetime
 
-engine = create_engine(
-    settings.DATABASE_URL
-)
+engine = create_engine(settings.DATABASE_URL)
 
 # 数据库session会话的连接工厂
 SessionLocal = sessionmaker(bind=engine, autoflush=False)
+
 
 def get_db():
     db = SessionLocal()
@@ -22,9 +21,14 @@ def get_db():
     finally:
         db.close()
 
+
 class Base(DeclarativeBase):
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, comment="主键ID")
-    create_time: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, comment="创建时间")
+    id: Mapped[int] = mapped_column(
+        primary_key=True, autoincrement=True, comment="主键ID"
+    )
+    create_time: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.now, comment="创建时间"
+    )
     update_time: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间"
     )
