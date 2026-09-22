@@ -47,3 +47,7 @@ a {
 img {
   max-width: 100%;
 }
+
+.el-tooltip__trigger {
+  outline: none !important;
+}

@@ -46,6 +46,10 @@ import { reactive, ref } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
+import { loginApi } from '@/api/auth'
+import { useUser } from '@/utils/user'
+
+const { saveLoginData } = useUser()
 
 const form = reactive({
   username: '',
@@ -54,13 +58,15 @@ const form = reactive({
 
 const loadingValue = ref(false)
 
-const login = () => {
+const login = async () => {
   loadingValue.value = true
-  setTimeout(() => {
-    loadingValue.value = false
+  const res = await loginApi(form)
+  loadingValue.value = false
+  if (res.code === 200) {
+    saveLoginData(res.data)
     ElMessage.success('登录成功')
     router.push('/manager/home')
-  }, 2000)
+  }
 }
 </script>
 
