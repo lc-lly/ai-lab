@@ -13,7 +13,7 @@ export function useUser() {
 
   function updateUser(user) {
     setUserInfo(user)
-    userInfo.value = data.user
+    userInfo.value = user
   }
 
   function reloadUser() {
