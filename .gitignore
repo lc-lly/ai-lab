@@ -2,6 +2,7 @@
 node_modules/
 .pnpm-store/
 __pycache__/
+uploads/
 
 # Build output
 dist/
