@@ -16,3 +16,8 @@ class Response(BaseModel):
     @classmethod
     def error(cls, code: int = 500, message: str = "请求失败"):
         return cls(code=code, message=message)
+
+
+class PageResponse(BaseModel):
+    list: Any = []
+    total: int = 0
