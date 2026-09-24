@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.cors import CORSMiddleware
 from app.config import UPLOAD_DIR
 from app.models.user import User
@@ -31,7 +32,8 @@ app.include_router(api)
 
 # 注册自定义异常
 app.add_exception_handler(BusinessException, business_exception_handler)
-app.add_exception_handler(HTTPException, http_exception_handler)
+# 注册父类 starlette 的 HTTPException，否则路由 404/405 不会被捕获
+app.add_exception_handler(StarletteHTTPException, http_exception_handler)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 # 全局的异常兜底，必须放在最后注册
 app.add_exception_handler(Exception, global_exception_handler)

@@ -12,7 +12,8 @@ const router = createRouter({
       children: [
         { path: 'home', name: 'Home', component: () => import('@/views/Home.vue') },
         { path: 'lab', name: 'Lab', component: () => import('@/views/Lab.vue') },
-        { path: 'profile', name: 'Profile', component: () => import('@/views/Profile.vue') }
+        { path: 'profile', name: 'Profile', component: () => import('@/views/Profile.vue') },
+        { path: 'password', name: 'Password', component: () => import('@/views/Password.vue') }
       ]
     },
     { path: '/login', name: 'Login', component: () => import('@/views/Login.vue') },
