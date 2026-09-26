@@ -14,7 +14,8 @@ const router = createRouter({
         { path: 'lab', name: 'Lab', component: () => import('@/views/Lab.vue') },
         { path: 'profile', name: 'Profile', component: () => import('@/views/Profile.vue') },
         { path: 'password', name: 'Password', component: () => import('@/views/Password.vue') },
-        { path: 'user', name: 'User', component: () => import('@/views/User.vue') }
+        { path: 'user', name: 'User', component: () => import('@/views/User.vue') },
+        { path: 'equipment', name: 'Equipment', component: () => import('@/views/Equipment.vue') }
       ]
     },
     { path: '/login', name: 'Login', component: () => import('@/views/Login.vue') },
