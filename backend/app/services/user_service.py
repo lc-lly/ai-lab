@@ -1,4 +1,3 @@
-import email
 from operator import or_
 from app.common.exceptions import BusinessException
 from app.common.response import PageResponse
@@ -20,7 +19,9 @@ def get_user_info(user: User) -> UserResponse:
 
 
 def update_user_info(db: Session, user: User, data: UserUpdateRequest):
-    user_dict = data.model_dump(exclude_none=True)  # pydantic对象转为dict
+    user_dict = data.model_dump(
+        exclude_none=True, exclude=("role", "status")
+    )  # pydantic对象转为dict
     for field, value in user_dict.items():
         setattr(user, field, value)
     db.commit()
@@ -95,7 +96,7 @@ def update_user(db: Session, user_id: int, data: UserUpdateRequest):
 def delete_user(db: Session, user_id: int, current_user: User):
     """删除用户"""
     if user_id == current_user.id:
-        raise BusinessException(message="不能删除当前用户")
+        raise BusinessException(message="不能删除当前登录的用户")
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise BusinessException(message="用户不存在")

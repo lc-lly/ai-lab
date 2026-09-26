@@ -5,6 +5,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.cors import CORSMiddleware
 from app.config import UPLOAD_DIR
 from app.models.user import User
+from app.models.lab import Lab
 from app.database import Base, engine
 from app.api import api
 from app.common.exceptions import (
@@ -15,7 +16,7 @@ from app.common.exceptions import (
     global_exception_handler,
 )
 
-# 自动创建数据库和表
+# 自动创建数据库表
 Base.metadata.create_all(bind=engine)
 
 origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
