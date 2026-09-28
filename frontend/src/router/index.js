@@ -21,6 +21,16 @@ const router = createRouter({
           path: 'lab-equipment',
           name: 'LabEquipment',
           component: () => import('@/views/LabEquipment.vue')
+        },
+        {
+          path: 'my-reservation',
+          name: 'MyReservation',
+          component: () => import('@/views/MyReservation.vue')
+        },
+        {
+          path: 'audit-reservation',
+          name: 'AuditReservation',
+          component: () => import('@/views/AuditReservation.vue')
         }
       ]
     },
