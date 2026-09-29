@@ -1,0 +1,15 @@
+from fastapi import APIRouter, Depends
+
+from app.common.response import Response
+from app.dependencies.auth import get_current_user
+from app.models.user import User
+from app.schemas.ai import ChatMessage, ChatRequest
+from app.services import ai_service
+
+router = APIRouter(prefix="/ai", tags=["ai相关的接口"])
+
+
+@router.post("/chat")
+def chat(data: ChatRequest, current_user: User = Depends(get_current_user)):
+    content = ai_service.chat(data)
+    return Response.success(data=ChatMessage(role="assistant", content=content))
