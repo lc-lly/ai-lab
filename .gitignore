@@ -2,7 +2,10 @@
 node_modules/
 .pnpm-store/
 __pycache__/
+
+# files
 uploads/
+chroma/
 
 # Build output
 dist/
