@@ -9,3 +9,4 @@ python-multipart==0.0.32
 openai==3.14.1
 chromadb==1.5.9
 sentence-transformers==6.0.1
+cryptography==50.0.1
