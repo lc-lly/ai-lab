@@ -6,12 +6,21 @@ from app.config import BASE_DIR
 
 KB_DIR = BASE_DIR / "data" / "kb"
 CHROMA_DIR = BASE_DIR / "data" / "chroma"
+EMBEDDING_MODEL_NAME = "BAAI/bge-small-zh-v1.5"
 
 _collection = None
 
-_embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-    model_name="BAAI/bge-small-zh-v1.5"
-)
+_embedding_fn = None
+
+
+def get_embedding_fn():
+    global _embedding_fn
+    if _embedding_fn is not None:
+        return _embedding_fn
+    _embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
+        model_name=EMBEDDING_MODEL_NAME
+    )
+    return _embedding_fn
 
 
 def get_collection() -> Collection:
@@ -23,7 +32,7 @@ def get_collection() -> Collection:
     CHROMA_DIR.mkdir(parents=True, exist_ok=True)
     client = chromadb.PersistentClient(path=str(CHROMA_DIR))
     col = client.get_or_create_collection(
-        name="lab_kb", embedding_function=_embedding_fn
+        name="lab_kb", embedding_function=get_embedding_fn()
     )
     if col.count() == 0:
         ids = []
@@ -40,6 +49,13 @@ def get_collection() -> Collection:
             col.add(ids=ids, documents=docs, metadatas=metas)
     _collection = col
     return _collection
+
+
+def warmup():
+    """启动的时候初始化向量库  启动预热"""
+    col = get_collection()
+    if col.count() > 0:
+        col.query(query_texts=["预热"], n_results=1)
 
 
 def search(query: str):

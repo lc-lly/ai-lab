@@ -1,5 +1,6 @@
 import asyncio
 from contextlib import asynccontextmanager
+import traceback
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
@@ -19,7 +20,7 @@ from app.common.exceptions import (
     validation_exception_handler,
     global_exception_handler,
 )
-from app.services import reservation_service
+from app.services import kb_service, reservation_service
 
 # 自动创建数据库表
 Base.metadata.create_all(bind=engine)
@@ -27,6 +28,10 @@ Base.metadata.create_all(bind=engine)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    try:
+        await asyncio.to_thread(kb_service.warmup)
+    except Exception:
+        traceback.print_exc()
     task = asyncio.create_task(
         reservation_service.run_expire_scan()
     )  # 启动项目开启异步的扫描任务

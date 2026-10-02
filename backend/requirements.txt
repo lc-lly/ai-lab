@@ -10,3 +10,6 @@ openai==3.14.1
 chromadb==1.5.9
 sentence-transformers==6.0.1
 cryptography==50.0.1
+langgraph==1.2.11
+langchain-openai==1.6.2
+langchain-core==1.6.3
