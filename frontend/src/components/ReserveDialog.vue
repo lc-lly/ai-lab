@@ -82,8 +82,8 @@ const form = reactive({
 })
 const rules = {
   date: [{ required: true, message: '请选择预约日期', trigger: 'change' }],
-  start_time: [{ required: true, message: '请选择开始时间', trigger: 'change' }],
-  end_time: [{ required: true, message: '请选择结束时间', trigger: 'change' }]
+  startTime: [{ required: true, message: '请选择开始时间', trigger: 'change' }],
+  endTime: [{ required: true, message: '请选择结束时间', trigger: 'change' }]
 }
 
 const handleSubmit = async () => {

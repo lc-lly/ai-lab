@@ -3,7 +3,7 @@
     <el-card>
       <template #header>
         <div style="font-size: 16px; font-weight: bold">
-          <span>我的预约记录</span>
+          <span>预约审核</span>
         </div>
       </template>
       <div style="margin-bottom: 10px">

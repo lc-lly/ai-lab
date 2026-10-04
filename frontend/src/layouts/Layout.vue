@@ -91,7 +91,7 @@ import {
   User,
   OfficeBuilding,
   Tickets,
-  Document,
+  DocumentChecked,
   ChatDotRound
 } from '@element-plus/icons-vue'
 import { useUser } from '@/utils/user'
