@@ -35,8 +35,13 @@ async def lifespan(app: FastAPI):
     task = asyncio.create_task(
         reservation_service.run_expire_scan()
     )  # 启动项目开启异步的扫描任务
-    yield
-    task.cancel()  # 关闭项目同时取消异步任务
+    try:
+        yield
+    finally:
+        task.cancel()  # 关闭项目同时取消异步任务
+        await asyncio.gather(
+            task, return_exceptions=True
+        )  # 取消任务时不再把 canceledError 抛给 lifespan
 
 
 origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
