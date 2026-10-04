@@ -1,3 +1,7 @@
 {
-    "python-envs.pythonProjects": []
+    "python-envs.pythonProjects": [],
+    // Python Environments 扩展：关闭新终端自动激活虚拟环境
+    "python-envs.terminal.autoActivationType": "off",
+    // Python 扩展（旧）：同样关闭终端自动激活
+    "python.terminal.activateEnvironment": false
 }
