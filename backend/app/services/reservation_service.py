@@ -1,5 +1,6 @@
 import asyncio
-from sqlalchemy.orm import Session
+from sqlalchemy import or_
+from sqlalchemy.orm import Session, joinedload
 from datetime import datetime
 
 from app.common.exceptions import BusinessException
@@ -27,7 +28,13 @@ def get_reservation_page_list(
         query = query.filter(Reservation.status == status)
     total = query.count()
     items = (
-        query.order_by(Reservation.id.desc())
+        # 预加载关联对象，避免回显 user_name / lab_name 时逐条懒加载（N+1）
+        query.options(
+            joinedload(Reservation.user),
+            joinedload(Reservation.lab),
+            joinedload(Reservation.equipment),
+        )
+        .order_by(Reservation.id.desc())
         .offset((page - 1) * page_size)
         .limit(page_size)
         .all()
@@ -82,10 +89,16 @@ def create_reservation(db: Session, current_user: User, data: ReservationCreateR
         Reservation.start_time < data.end_time,
         Reservation.end_time > data.start_time,
     )
+    # filter 是链式返回新 Query，必须重新赋值，否则条件不会生效
     if data.equipment_id:
-        query.filter(Reservation.equipment_id == data.equipment_id)  # 预约实验室设备
-    else:
-        query.filter(Reservation.equipment_id.is_(None))  # 只预约实验室
+        # 预约设备：同一设备的预约冲突，或者实验室已被整间预约也冲突
+        query = query.filter(
+            or_(
+                Reservation.equipment_id == data.equipment_id,
+                Reservation.equipment_id.is_(None),
+            )
+        )
+    # 预约整个实验室时不额外过滤：该时段内任何预约（整间或任一设备）都算占用
     if query.first():
         raise BusinessException(message="该时段已预约")
 
@@ -152,8 +165,8 @@ async def run_expire_scan():
     """一分钟扫描一次执行任务"""
     try:
         while True:
+            # 同步的数据库操作放到线程池执行，避免阻塞事件循环
             await asyncio.to_thread(expire_pending_reservation)
-            expire_pending_reservation()
             await asyncio.sleep(60)
     except asyncio.CancelledError:
         return
